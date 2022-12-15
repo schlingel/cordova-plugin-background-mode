@@ -121,6 +121,12 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     if (!enabled)
         return;
 
+    AVAudioSession* session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback
+                    mode:AVAudioSessionModeVoicePrompt
+                 options:session.categoryOptions
+                   error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [audioPlayer play];
     [self fireEvent:kAPPBackgroundEventActivate];
 }
@@ -170,9 +176,7 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     // Don't activate the audio session yet
     [session setActive:NO error:NULL];
 
-    [session setCategory:AVAudioSessionCategoryPlayback
-                    mode:AVAudioSessionModeVoicePrompt
-                 options:AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers
+    [session setCategory:AVAudioSessionCategoryAmbient
                    error:NULL];
 
     // Active the audio session
